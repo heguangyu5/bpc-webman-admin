@@ -21,7 +21,7 @@ class RuleController extends Crud
      *
      * @var string[]
      */
-    protected $noNeedAuth = ['get', 'permission'];
+    const noNeedAuth = ['get', 'permission'];
 
     /**
      * @var Rule
@@ -129,21 +129,37 @@ class RuleController extends Crud
                 continue;
             }
             if (class_exists($class)) {
-                $reflection = new \ReflectionClass($class);
-                $properties = $reflection->getDefaultProperties();
-                $no_need_auth = array_merge($properties['noNeedLogin'] ?? [], $properties['noNeedAuth'] ?? []);
-                $class = $reflection->getName();
-                $pid = $item->id;
-                $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
+                $no_need_auth = array_merge(
+                    defined("$class::noNeedLogin") ? $class::noNeedLogin : [],
+                    defined("$class::noNeedAuth")  ? $class::noNeedAuth  : []
+                );
+                if (defined('__BPC__')) {
+                    $pid = $item->id;
+                    $methods = get_class_methods($class);
+                    $class = bpc_get_declared_class_name($class);
+                } else {
+                    $reflection = new \ReflectionClass($class);
+                    $class = $reflection->getName();
+                    $pid = $item->id;
+                    $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
+                }
                 foreach ($methods as $method) {
-                    $method_name = $method->getName();
+                    if (defined('__BPC__')) {
+                        $method_name = $method;
+                    } else {
+                        $method_name = $method->getName();
+                    }
                     if (strtolower($method_name) === 'index' || strpos($method_name, '__') === 0 || in_array($method_name, $no_need_auth)) {
                         continue;
                     }
                     $name = "$class@$method_name";
 
                     $methods_in_files[$name] = $name;
-                    $title = Util::getCommentFirstLine($method->getDocComment()) ?: $method_name;
+                    if (defined('__BPC__')) {
+                        $title = $method_name;
+                    } else {
+                        $title = Util::getCommentFirstLine($method->getDocComment()) ?: $method_name;
+                    }
                     $menu = $items[$name] ?? [];
                     if ($menu) {
                         if ($menu->title != $title) {
@@ -269,17 +285,17 @@ class RuleController extends Crud
      */
     protected function removeNotContain(&$array, $key, $values)
     {
-        foreach ($array as $k => &$item) {
+        foreach ($array as $k => $item) {
             if (!is_array($item)) {
                 continue;
             }
-            if (!$this->arrayContain($item, $key, $values)) {
+            if (!$this->arrayContain($array[$k], $key, $values)) {
                 unset($array[$k]);
             } else {
                 if (!isset($item['children'])) {
                     continue;
                 }
-                $this->removeNotContain($item['children'], $key, $values);
+                $this->removeNotContain($array[$k]['children'], $key, $values);
             }
         }
     }

@@ -18,7 +18,7 @@ class ConfigController extends Base
      * 不需要验证权限的方法
      * @var string[]
      */
-    protected $noNeedAuth = ['get'];
+    const noNeedAuth = ['get'];
 
     /**
      * 账户设置
@@ -86,8 +86,8 @@ class ConfigController extends Base
                     $data[$section]['accordion'] = !empty($items['accordion']);
                     $data[$section]['collapse'] = !empty($items['collapse']);
                     $data[$section]['control'] = !empty($items['control']);
-                    $data[$section]['controlWidth'] = (int)$items['controlWidth'] ?? 500;
-                    $data[$section]['select'] = (int)$items['select'] ?? 0;
+                    $data[$section]['controlWidth'] = (int)($items['controlWidth'] ?? 500);
+                    $data[$section]['select'] = (int)($items['select'] ?? 0);
                     $data[$section]['async'] = true;
                     break;
                 case 'tab':

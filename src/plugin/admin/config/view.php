@@ -17,6 +17,15 @@ use support\view\Twig;
 use support\view\Blade;
 use support\view\ThinkPHP;
 
-return [
-    'handler' => Raw::class
-];
+if (defined('__BPC__')) {
+    return [
+        'handler' => Raw::class,
+        'options' => [
+            'view_suffix' => 'phtml'
+        ]
+    ];
+} else {
+    return [
+        'handler' => Raw::class
+    ];
+}

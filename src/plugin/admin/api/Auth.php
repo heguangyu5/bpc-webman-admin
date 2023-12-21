@@ -44,10 +44,8 @@ class Auth
             return true;
         }
         // 获取控制器鉴权信息
-        $class = new \ReflectionClass($controller);
-        $properties = $class->getDefaultProperties();
-        $noNeedLogin = $properties['noNeedLogin'] ?? [];
-        $noNeedAuth = $properties['noNeedAuth'] ?? [];
+        $noNeedLogin = defined("$controller::noNeedLogin") ? $controller::noNeedLogin : [];
+        $noNeedAuth  = defined("$controller::noNeedAuth")  ? $controller::noNeedAuth  : [];
 
         // 不需要登录
         if (in_array($action, $noNeedLogin)) {

@@ -19,7 +19,7 @@ class InstallController extends Base
      * 不需要登录的方法
      * @var string[]
      */
-    protected $noNeedLogin = ['step1', 'step2'];
+    const noNeedLogin = ['step1', 'step2'];
 
     /**
      * 设置数据库
@@ -29,7 +29,7 @@ class InstallController extends Base
      */
     public function step1(Request $request): Response
     {
-        $database_config_file = base_path() . '/plugin/admin/config/database.php';
+        $database_config_file = BASE_PATH_REAL . '/plugin-admin-config-database.json';
         clearstatcache();
         if (is_file($database_config_file)) {
             return $this->json(1, '管理后台已经安装！如需重新安装，请删除该插件数据库配置文件并重启');
@@ -94,11 +94,15 @@ class InstallController extends Base
         }
 
         $sql_file = base_path() . '/plugin/admin/install.sql';
-        if (!is_file($sql_file)) {
-            return $this->json(1, '数据库SQL文件不存在');
+        if (defined('__BPC__')) {
+            $sql_query = resource_get_contents($sql_file);
+        } else {
+            if (!is_file($sql_file)) {
+                return $this->json(1, '数据库SQL文件不存在');
+            }
+            $sql_query = file_get_contents($sql_file);
         }
 
-        $sql_query = file_get_contents($sql_file);
         $sql_query = $this->removeComments($sql_query);
         $sql_query = $this->splitSqlFile($sql_query, ';');
         foreach ($sql_query as $sql) {
@@ -110,30 +114,29 @@ class InstallController extends Base
         // 安装过程中没有数据库配置，无法使用api\Menu::import()方法
         $this->importMenu($menus, $db);
 
-        $config_content = <<<EOF
-<?php
-return  [
-    'default' => 'mysql',
-    'connections' => [
-        'mysql' => [
-            'driver'      => 'mysql',
-            'host'        => '$host',
-            'port'        => '$port',
-            'database'    => '$database',
-            'username'    => '$user',
-            'password'    => '$password',
-            'charset'     => 'utf8mb4',
-            'collation'   => 'utf8mb4_general_ci',
-            'prefix'      => '',
-            'strict'      => true,
-            'engine'      => null,
-        ],
-    ],
-];
-EOF;
+        $config_content = json_encode([
+            'default' => 'mysql',
+            'connections' => [
+                'mysql' => [
+                    'driver'      => 'mysql',
+                    'host'        => $host,
+                    'port'        => $port,
+                    'database'    => $database,
+                    'username'    => $user,
+                    'password'    => $password,
+                    'charset'     => 'utf8mb4',
+                    'collation'   => 'utf8mb4_general_ci',
+                    'prefix'      => '',
+                    'strict'      => true,
+                    'engine'      => null,
+                ],
+            ],
+        ], JSON_PRETTY_PRINT);
 
         file_put_contents($database_config_file, $config_content);
 
+        if (defined('__BPC__')) {
+        } else {
         $think_orm_config = <<<EOF
 <?php
 return [
@@ -172,7 +175,7 @@ return [
 ];
 EOF;
         file_put_contents(base_path() . '/plugin/admin/config/thinkorm.php', $think_orm_config);
-
+        }
 
         // 尝试reload
         if (function_exists('posix_kill')) {
@@ -198,10 +201,10 @@ EOF;
         if ($password != $password_confirm) {
             return $this->json(1, '两次密码不一致');
         }
-        if (!is_file($config_file = base_path() . '/plugin/admin/config/database.php')) {
+        if (!is_file(BASE_PATH_REAL . '/plugin-admin-config-database.json')) {
             return $this->json(1, '请先完成第一步数据库配置');
         }
-        $config = include $config_file;
+        $config = include base_path() . '/plugin/admin/config/database.php';
         $connection = $config['connections']['mysql'];
         $pdo = $this->getPdo($connection['host'], $connection['username'], $connection['password'], $connection['port'], $connection['database']);
 

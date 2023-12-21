@@ -20,13 +20,13 @@ class Base
      * 无需登录及鉴权的方法
      * @var array
      */
-    protected $noNeedLogin = [];
+    const noNeedLogin = [];
 
     /**
      * 需要登录无需鉴权的方法
      * @var array
      */
-    protected $noNeedAuth = [];
+    const noNeedAuth = [];
 
     /**
      * 数据限制

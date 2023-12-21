@@ -548,9 +548,9 @@ class Util
      */
     public static function pauseFileMonitor()
     {
-        if (method_exists(Monitor::class, 'pause')) {
-            Monitor::pause();
-        }
+//        if (method_exists(Monitor::class, 'pause')) {
+//            Monitor::pause();
+//        }
     }
 
     /**
@@ -559,9 +559,9 @@ class Util
      */
     public static function resumeFileMonitor()
     {
-        if (method_exists(Monitor::class, 'resume')) {
-            Monitor::resume();
-        }
+//        if (method_exists(Monitor::class, 'resume')) {
+//            Monitor::resume();
+//        }
     }
 
 }

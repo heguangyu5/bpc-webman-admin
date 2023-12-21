@@ -17,7 +17,7 @@ class DictController extends Base
     /**
      * 不需要授权的方法
      */
-    protected $noNeedAuth = ['get'];
+    const noNeedAuth = ['get'];
 
     /**
      * 浏览
@@ -42,8 +42,8 @@ class DictController extends Base
         } else {
             $items = Option::where('name', 'like', 'dict_%')->get()->toArray();
         }
-        foreach ($items as &$item) {
-            $item['name'] = Dict::optionNameTodictName($item['name']);
+        foreach ($items as $idx => $item) {
+            $items[$idx]['name'] = Dict::optionNameTodictName($item['name']);
         }
         return $this->json(0, 'ok', $items);
     }

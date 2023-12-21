@@ -18,13 +18,13 @@ class IndexController
      * 无需登录的方法
      * @var string[]
      */
-    protected $noNeedLogin = ['index'];
+    const noNeedLogin = ['index'];
 
     /**
      * 不需要鉴权的方法
      * @var string[]
      */
-    protected $noNeedAuth = ['dashboard'];
+    const noNeedAuth = ['dashboard'];
 
     /**
      * 后台主页
@@ -35,7 +35,7 @@ class IndexController
     public function index(Request $request): Response
     {
         clearstatcache();
-        if (!is_file(base_path('plugin/admin/config/database.php'))) {
+        if (!is_file(BASE_PATH_REAL . '/plugin-admin-config-database.json')) {
             return raw_view('index/install');
         }
         $admin = admin();
