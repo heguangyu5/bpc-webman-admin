@@ -24,6 +24,10 @@ libwebman-admin:
 		-u illuminate-events        \
 		-u illuminate-pagination    \
 		-u illuminate-database      \
+		-u symfony-polyfill-php80           \
+		-u symfony-contracts-translation    \
+		-u symfony-component-translation    \
+		-u carbon                           \
 		-u webman                   \
 		--input-file src.list
 
