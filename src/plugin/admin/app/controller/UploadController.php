@@ -13,7 +13,7 @@ use support\Response;
 use Throwable;
 
 /**
- * 附件管理 
+ * 附件管理
  */
 class UploadController extends Crud
 {
@@ -215,7 +215,7 @@ class UploadController extends Crud
             $height = $image->height();
             $size = min($width, $height);
             $relative_path = 'upload/avatar/' . date('Ym');
-            $real_path = base_path() . "/plugin/admin/public/$relative_path";
+            $real_path = BASE_PATH_REAL . "/plugin/admin/public/$relative_path";
             if (!is_dir($real_path)) {
                 mkdir($real_path, 0777, true);
             }
@@ -223,19 +223,19 @@ class UploadController extends Crud
             $ext = $file->getUploadExtension();
 
             $image->crop($size, $size)->resize(300, 300);
-            $path = base_path() . "/plugin/admin/public/$relative_path/$name.lg.$ext";
+            $path = BASE_PATH_REAL . "/plugin/admin/public/$relative_path/$name.lg.$ext";
             $image->save($path);
 
             $image->resize(120, 120);
-            $path = base_path() . "/plugin/admin/public/$relative_path/$name.md.$ext";
+            $path = BASE_PATH_REAL . "/plugin/admin/public/$relative_path/$name.md.$ext";
             $image->save($path);
 
             $image->resize(60, 60);
-            $path = base_path() . "/plugin/admin/public/$relative_path/$name.$ext";
+            $path = BASE_PATH_REAL . "/plugin/admin/public/$relative_path/$name.$ext";
             $image->save($path);
 
             $image->resize(30, 30);
-            $path = base_path() . "/plugin/admin/public/$relative_path/$name.sm.$ext";
+            $path = BASE_PATH_REAL . "/plugin/admin/public/$relative_path/$name.sm.$ext";
             $image->save($path);
 
             return json([
@@ -274,7 +274,7 @@ class UploadController extends Crud
             throw new BusinessException('未找到上传文件', 400);
         }
 
-        $base_dir = base_path() . '/plugin/admin/public/';
+        $base_dir = BASE_PATH_REAL . '/plugin/admin/public/';
         $full_dir = $base_dir . $relative_dir;
         if (!is_dir($full_dir)) {
             mkdir($full_dir, 0777, true);
