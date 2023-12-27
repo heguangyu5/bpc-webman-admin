@@ -249,7 +249,7 @@ EOF;
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(["tinymce"], function() {
+layui.use(['tinymce'], function() {
     var tinymce = layui.tinymce
     var edit = tinymce.render({
         elem: "#$id",$options_string
@@ -307,7 +307,7 @@ EOF;
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(["upload", "layer", "popup", "util"], function() {
+layui.use(['upload', 'layer', 'popup', 'util'], function() {
     let input = layui.$("#$id").prev();
     input.prev().html(layui.util.escape(input.val()));
     layui.$("#attachment-choose-$id").on("click", function() {
@@ -315,7 +315,7 @@ layui.use(["upload", "layer", "popup", "util"], function() {
             type: 2,
             title: "选择附件",
             content: "/app/admin/upload/attachment",
-            area: ["95%", "90%"],
+            area: ['95%', '90%'],
             success: function (layero, index) {
                 parent.layui.$("#layui-layer" + index).data("callback", function (data) {
                     input.val(data.url).prev().html(layui.util.escape(data.url));
@@ -379,7 +379,7 @@ EOF;
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(["upload", "layer"], function() {
+layui.use(['upload', 'layer'], function() {
     let input = layui.$("#$id").prev();
     input.prev().attr("src", input.val());
     layui.$("#attachment-choose-$id").on("click", function() {
@@ -387,7 +387,7 @@ layui.use(["upload", "layer"], function() {
             type: 2,
             title: "选择附件",
             content: "/app/admin/upload/attachment?ext=jpg,jpeg,png,gif,bmp",
-            area: ["95%", "90%"],
+            area: ['95%', '90%'],
             success: function (layero, index) {
                 parent.layui.$("#layui-layer" + index).data("callback", function (data) {
                     input.val(data.url).prev().attr("src", data.url);
@@ -450,8 +450,8 @@ EOF;
 EOF;
         $this->jsContent .= <<<EOF
 
-// 字段 {$options["label"]} $field
-layui.use(["laydate"], function() {
+// 字段 {$options['label']} $field
+layui.use(['laydate'], function() {
     layui.laydate.render({
         elem: "#$id",$options_string
     });
@@ -510,10 +510,10 @@ EOF;
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(["laydate"], function() {
+layui.use(['laydate'], function() {
     layui.laydate.render({
         elem: "#$id",
-        range: ["#$id_start", "#$id_end"],$options_string
+        range: ['#$id_start', '#$id_end'],$options_string
     });
 })
 
@@ -565,7 +565,7 @@ EOF;
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(["iconPicker"], function() {
+layui.use(['iconPicker'], function() {
     layui.iconPicker.render({
         elem: "#$id",
         type: "fontClass",
@@ -607,7 +607,7 @@ EOF;
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(["form"], function() {
+layui.use(['form'], function() {
     layui.$("#$id").attr("checked", layui.$('input[name="$field"]').val() != 0);
     layui.form.render();
     layui.form.on("switch($field)", function(data) {
@@ -722,7 +722,7 @@ EOF;
             $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(["jquery", "xmSelect", "popup"], function() {
+layui.use(['jquery', 'xmSelect', 'popup'], function() {
     layui.$.ajax({
         url: "$url",
         dataType: "json",
@@ -748,7 +748,7 @@ EOF;
             $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(["jquery", "xmSelect"], function() {
+layui.use(['jquery', 'xmSelect'], function() {
     let value = layui.$("#$id").attr("value");
     let initValue = value ? value.split(",") : [];
     layui.xmSelect.render({
